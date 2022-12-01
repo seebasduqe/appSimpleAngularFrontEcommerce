@@ -1,0 +1,75 @@
+<div class="container">
+  <form class="form" #checkoutForm="ngForm">
+
+    <mat-form-field class="form__element" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        required
+        [(ngModel)]="model.name"
+        name="name"
+        #name="ngModel"
+      />
+      <mat-error *ngIf="!name.invalid || name.pristine">
+        Nombre es requerido
+      </mat-error>
+    </mat-form-field>
+    <mat-radio-group>
+      <mat-radio-button
+        value="pickup"  (click)="onPickOrDelivery(false)"
+      > Pick up
+      </mat-radio-button>
+      <mat-radio-button
+        value="delivery" (click)="onPickOrDelivery(true)" checked
+      > Delivery
+      </mat-radio-button>
+    </mat-radio-group>
+    <ng-container *ngIf="isDelivery; else showStores">
+      <mat-form-field class="form__element" appearance="fill">
+        <mat-label>Shipping Address</mat-label>
+        <input
+          matInput
+          [(ngModel)]="model.shippingAddress"
+          name="shippingAddress"
+          #shippingAddress ="ngModel"
+        />
+      </mat-form-field>
+      <mat-form-field class="form__element" appearance="fill">
+        <mat-label>City</mat-label>
+        <input
+          matInput
+          [(ngModel)]="model.city"
+          name="city"
+          #city ="ngModel"
+        />
+      </mat-form-field>
+    </ng-container>
+    <ng-template #showStores>
+      <mat-form-field class="form__element" appearance="fill">
+        <mat-label>Seleccione la tienda: </mat-label>
+        <mat-select name="store" #store="ngModel" [(ngModel)]="model.store">
+          <mat-option [value]="tienda" *ngFor="let tienda of stores">
+            {{tienda.name}} - {{tienda.openingHours}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-template>
+
+  </form>
+</div>
+
+<app-details></app-details>
+
+<div class="actions">
+  <button
+    mat-raised-button
+    (click)="onSubmit(checkoutForm)"
+    [disabled]="!checkoutForm.form.valid"
+    class="action_btn"
+    color="primary"
+    type="submit"
+  >
+    checkout
+  </button>
+</div>
+
